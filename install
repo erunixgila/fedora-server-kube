@@ -1,3 +1,16 @@
+#edit hosts
+
+#############disabled selinux
+
+##############disabled swap
+nano /etc/fstab
+
+free -h
+
+####################
+
+firewall-cmd --list-all
+
 ###### Configure firewal on master node ######
 firewall-cmd --permanent --add-port={6443,2379,2380,10250,10251,10252,10257,10259,179}/tcp
 firewall-cmd --permanent --add-port=4789/udp
@@ -27,11 +40,20 @@ net.bridge.bridge-nf-call-ip6tables = 1
 
 sysctl --system
 
-###### Install container runtime containerd on all the nodes ######
+#################### install docker io library #############
 yum install -y yum-utils
+   
+nano /etc/yum.repos.d/docker-ce.repo
 
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-
+[docker-ce-stable]
+name=Docker CE Stable - \$basearch
+baseurl=https://download.docker.com/linux/fedora/42/\$basearch/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://download.docker.com/linux/fedora/gpg
+       
+yum install -y yum-utils
+dnf makecache
 sudo dnf install containerd.io -y
 
 ###### Configure containerd ######
