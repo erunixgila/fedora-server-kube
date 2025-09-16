@@ -1,0 +1,25 @@
+#### 10.0.150.100 kube1-master
+  
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of control-plane nodes by copying certificate authorities
+and service account keys on each node and then running the following as root:
+
+  kubeadm join kube1-master:6443 --token ien7gv.7oh5qcm497jj551n \
+	--discovery-token-ca-cert-hash sha256:fb1717e99d82907e50dad15b42d22126543d25238cba9d1b27b78f396ba9af08 \
+	--control-plane 
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join kube1-master:6443 --token ien7gv.7oh5qcm497jj551n \
+	--discovery-token-ca-cert-hash sha256:fb1717e99d82907e50dad15b42d22126543d25238cba9d1b27b78f396ba9af08 
